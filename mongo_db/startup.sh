@@ -4,7 +4,7 @@
 DB_NAME="myapp"
 DB_USER="appuser"
 DB_PASSWORD="dbuser123"
-DB_PORT="5000"
+DB_PORT="5001"
 
 echo "Starting MongoDB setup..."
 
@@ -33,6 +33,12 @@ if mongosh --port ${DB_PORT} --eval "db.adminCommand('ping')" > /dev/null 2>&1; 
     else
         echo "To connect to the database, use:"
         echo "mongosh mongodb://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}?authSource=admin"
+    fi
+    
+    # Run seed script if it exists
+    if [ -f "scripts/seed.js" ]; then
+        echo "Running seed script..."
+        mongosh mongodb://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}?authSource=admin scripts/seed.js
     fi
     
     echo ""
